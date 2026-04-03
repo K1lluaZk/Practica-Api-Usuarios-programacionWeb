@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Usuarios - API REST</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 p-5 md:p-10">
+    <div class="max-w-5xl mx-auto">
+        <h1 class="text-3xl font-bold text-slate-800 mb-8 border-b-2 border-blue-500 pb-2 inline-block">Gestión de Usuarios (API REST)</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 h-fit">
+                <h2 id="form-title" class="text-xl font-bold mb-4 text-slate-700">Nuevo Usuario</h2>
+                <form id="userForm" class="space-y-4">
+                    <input type="hidden" id="userId">
+                    <div>
+                        <label class="block text-sm font-medium">Nombre</label>
+                        <input type="text" id="nombre" required class="w-full border p-2 rounded-lg outline-none focus:ring-2 focus:ring-blue-400">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium">Email</label>
+                        <input type="email" id="email" required class="w-full border p-2 rounded-lg outline-none focus:ring-2 focus:ring-blue-400">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium">Edad</label>
+                        <input type="number" id="edad" required class="w-full border p-2 rounded-lg outline-none focus:ring-2 focus:ring-blue-400">
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" id="activo" class="w-4 h-4 text-blue-600">
+                        <label for="activo" class="text-sm font-medium">Usuario Activo</label>
+                    </div>
+                    <button type="submit" id="btnSubmit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition">Guardar Usuario</button>
+                    <button type="button" id="btnCancel" onclick="resetForm()" class="hidden w-full bg-slate-400 text-white font-bold py-2 rounded-lg mt-2">Cancelar</button>
+                </form>
+            </div>
+
+            <div class="md:col-span-2 bg-white rounded-xl shadow-md overflow-hidden border border-slate-200">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-50 text-slate-600 uppercase text-xs">
+                        <tr>
+                            <th class="p-4">Información</th>
+                            <th class="p-4 text-center">Estado</th>
+                            <th class="p-4 text-right">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        <% if (users.length === 0) { %>
+                            <tr><td colspan="3" class="p-10 text-center text-slate-400">No hay usuarios. Agrega uno desde Postman o el formulario.</td></tr>
+                        <% } %>
+                        <% users.forEach(user => { %>
+                            <tr class="hover:bg-slate-50 transition">
+                                <td class="p-4">
+                                    <div class="font-bold text-slate-700"><%= user.nombre %></div>
+                                    <div class="text-xs text-slate-500"><%= user.email %> • <%= user.edad %> años</div>
+                                </td>
+                                <td class="p-4 text-center">
+                                    <span class="px-2 py-1 rounded text-[10px] font-bold <%= user.activo ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600' %>">
+                                        <%= user.activo ? 'ACTIVO' : 'INACTIVO' %>
+                                    </span>
+                                </td>
+                                <td class="p-4 text-right space-x-2">
+                                    <button onclick="fillForm('<%= user.id %>', '<%= user.nombre %>', '<%= user.email %>', <%= user.edad %>, <%= user.activo %>)" class="text-blue-500 hover:underline font-bold text-xs">EDITAR</button>
+                                    <button onclick="deleteUser('<%= user.id %>')" class="text-red-500 hover:underline font-bold text-xs">ELIMINAR</button>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('userForm')
+        let isEditing = false;
+
+        // MANEJO DEL ENVÍO (POST y PUT)
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault()
+            
+            const userData = {
+                nombre: document.getElementById('nombre').value,
+                email: document.getElementById('email').value,
+                edad: parseInt(document.getElementById('edad').value),
+                activo: document.getElementById('activo').checked
+            };
+
+            const id = document.getElementById('userId').value;
+            const url = isEditing ? `/users/${id}` : '/users'
+            const method = isEditing ? 'PUT' : 'POST'
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userData)
+                });
+
+                if (response.ok) {
+                    window.location.reload()
+                } else {
+                    alert('Error al procesar la solicitud')
+                }
+            } catch (error) {
+                console.error('Error:', error)
+            }
+        });
+
+        async function deleteUser(id) {
+            if (!confirm('¿Seguro que quieres eliminar este usuario?')) return
+
+            try {
+                const response = await fetch(`/users/${id}`, { method: 'DELETE' })
+                if (response.ok) window.location.reload()
+            } catch (error) {
+                console.error('Error:', error)
+            }
+        }
+
+        function fillForm(id, nombre, email, edad, activo) {
+            isEditing = true;
+            document.getElementById('userId').value = id
+            document.getElementById('nombre').value = nombre
+            document.getElementById('email').value = email
+            document.getElementById('edad').value = edad
+            document.getElementById('activo').checked = activo
+
+            document.getElementById('form-title').innerText = "Editando Usuario"
+            document.getElementById('btnSubmit').innerText = "Actualizar Usuario"
+            document.getElementById('btnSubmit').classList.replace('bg-blue-600', 'bg-orange-500')
+            document.getElementById('btnCancel').classList.remove('hidden')
+        }
+
+        function resetForm() {
+            window.location.reload()
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1775238579847,
+    "nombre": "Jose",
+    "email": "franyelis0806@icloud.com",
+    "edad": 20,
+    "activo": false
+  },
+  {
+    "id": 1775239089376,
+    "nombre": "Jose",
+    "email": "mario.suerodejesus@gmail.com",
+    "edad": 21,
+    "activo": false
+  }
+]
