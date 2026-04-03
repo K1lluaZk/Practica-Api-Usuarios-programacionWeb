@@ -1,13 +1,13 @@
-Mi Proyecto de Administrador de Usuarios
+## Mi Proyecto de Administrador de Usuarios
 
 Este es un proyecto sencillo de Backend donde construí una aplicación para guardar, ver, editar y borrar usuarios. Lo hice usando Node.js y el framework Express.
 
-¿Cómo funciona?
+## ¿Cómo funciona?
 
 El proyecto se divide en dos partes backend y frontend, el backend esta hecho con API que responde peticiones para crear usuario, editarlo, eliminarlo y mostrarlos todos, este proyecto usa node y express, y para conectar el backend con frontend, utilize ejs para añadir una interfaz para que el backend también tenga una interfaz pero que funciona con fecth y la API backend.
 
 
-Lo que mi aplicación puede hacer:
+## Lo que mi aplicación puede hacer:
 
 •	Guardar usuarios: Registra nombre, correo y edad. Tiene validaciones para que no aceptes edades negativas o correos mal escritos.
 
@@ -28,7 +28,7 @@ Ejecucion put: para editar un usuario creado anteriormente
 Ejecucion Delete: Para eliminar un usuario creado anteriormente
  
 
-Explicacion de ejecucion:
+## Explicacion de ejecucion:
 
 1. Ver la lista (GET /users)
 Esta es la función de lectura. Cuando entras a la página, el servidor abre el archivo users.json, lee todo lo que hay dentro y se lo pasa a la vista (EJS) para que tú veas las tarjetitas de los usuarios. En Postman, simplemente te devuelve el texto plano para que confirmes que los datos están ahí.
