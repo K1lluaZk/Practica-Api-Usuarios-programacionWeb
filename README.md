@@ -42,5 +42,7 @@ Esta función es de actualización. Cuando le das a "Editar", el servidor busca 
 4. Borrar un usuario (DELETE /users/:id)
 Esta es la función de limpieza. El servidor recibe el ID del usuario que quieres eliminar. Lo que hace internamente no es "borrar" un pedazo del archivo, sino que crea una lista nueva donde mete a todos los usuarios menos al que quieres eliminar, y luego guarda esa lista nueva sobre la anterior.
 
+<img width="1752" height="601" alt="image" src="https://github.com/user-attachments/assets/cc16b1db-2e4c-40a1-a275-df78c5f282ce" />
+
 
 Link de repo: K1lluaZk/Practica-Api-Usuarios-programacionWeb
